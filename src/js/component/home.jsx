@@ -1,24 +1,51 @@
-import React from "react";
-
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+import React, { useState, useEffect } from "react";
+import Todos from "./todos.jsx";
 
 //create your first component
 const Home = () => {
+	const [todos, setTodos] = useState([]);
+	const [todo, setTodo] = useState("");
+
+	useEffect(() => {
+		fetch("https://assets.breatheco.de/apis/fake/todos/user/JMonroy")
+			.then((response) => response.json())
+			.then((response) => {
+				setTodos(response);
+			});
+	}, []);
+
+	const addTodo = () => {
+		const data = [...todos, { label: todo, done: false }];
+		console.log(data);
+		setTodos(data);
+		fetch("https://assets.breatheco.de/apis/fake/todos/user/JMonroy", {
+			method: "PUT",
+			body: JSON.stringify(data),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+	};
+
 	return (
 		<div className="text-center mt-5">
-			<h1>Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+			<h1>To Do List</h1>
+			<input
+				type="text"
+				name="todo"
+				onChange={(event) => {
+					return setTodo(event.target.value);
+				}}
+				value={todo}
+			/>
+			<button
+				onClick={() => {
+					addTodo();
+					setTodo("");
+				}}>
+				Add task
+			</button>
+			<Todos listTodos={todos} />
 		</div>
 	);
 };
