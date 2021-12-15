@@ -27,6 +27,17 @@ const Home = () => {
 		});
 	};
 
+	const deleteTodo = (listUpdated) => {
+		setTodos(listUpdated);
+		fetch("https://assets.breatheco.de/apis/fake/todos/user/JMonroy", {
+			method: "PUT",
+			body: JSON.stringify(listUpdated),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+	};
+
 	return (
 		<div className="text-center mt-5">
 			<h1>To Do List</h1>
@@ -45,7 +56,7 @@ const Home = () => {
 				}}>
 				Add task
 			</button>
-			<Todos listTodos={todos} />
+			<Todos listTodos={todos} functionDelete={deleteTodo} />
 		</div>
 	);
 };
